@@ -50,6 +50,12 @@ async function run(){
       res.send(review);
     });
 
+    app.post('/reviews', async(req, res)=>{
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    })
+
     // app.get('/review', async(req,res) =>{
     //   let query ={};
     //   if(req.query.service_id){
