@@ -37,6 +37,13 @@ async function run(){
       res.send(service);
     })
 
+    app.get('/reviews/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const service = await reviewCollection.findOne(query);
+      res.send(service);
+    })
+
     app.get('/reviews', async(req,res) =>{
       console.log(req.query)
       let query ={};
@@ -46,11 +53,7 @@ async function run(){
          
         }
       }
-      // if(req.query.email){
-      //   query ={
-      //     email: req.query.email
-      //   }
-      // }
+      
       const cursor = reviewCollection.find(query);
       const myreview = await cursor.toArray();
       res.send(myreview);
@@ -66,6 +69,27 @@ async function run(){
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
       const result = await reviewCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    app.put('/reviews/:id', async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: ObjectId(id)};
+      const userEdit = req.body;
+      const option = {upsert: true}
+      console.log(userEdit)
+      const updateEdit = {
+        $set: {
+          service_name:userEdit.service_name,
+          service_id:userEdit.service_id,
+          user_name:userEdit.user_name,
+          image_url:userEdit.image_url,
+          rating:userEdit.rating,
+          email:userEdit.email,
+          comment:userEdit.comment,
+        }
+      }
+      const result = await reviewCollection.updateOne(filter, updateEdit, option);
       res.send(result);
     })
 
