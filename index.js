@@ -62,18 +62,27 @@ async function run(){
       res.send(result);
     });
 
-    app.get('/reviews', async(req,res) =>{
-      console.log(req.query)
-      let query ={};
-      if(req.query.email){
-        query = {
-          email: req.query.email
-        }
-      }
-      const cursor = reviewCollection.find(query);
-      const review = await cursor.toArray();
-      res.send(review);
-    });
+    app.delete('/reviews/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await reviewCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+
+    // app.get('/reviews', async(req,res) =>{
+    //   console.log(req.query)
+    //   let query ={};
+    //   if(req.query.email){
+    //     query = {
+    //       email: req.query.email
+    //     }
+    //   }
+    //   const cursor = reviewCollection.find(query);
+    //   const review = await cursor.toArray();
+    //   res.send(review);
+    // });
 
     // app.get('/review', async(req,res) =>{
     //   let query ={};
