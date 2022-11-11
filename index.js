@@ -40,21 +40,40 @@ async function run(){
     app.get('/reviews', async(req,res) =>{
       console.log(req.query)
       let query ={};
-      if(req.query.service_id){
+      if(req.query.service_id ){
         query = {
           service_id: req.query.service_id
+         
         }
       }
+      // if(req.query.email){
+      //   query ={
+      //     email: req.query.email
+      //   }
+      // }
       const cursor = reviewCollection.find(query);
-      const review = await cursor.toArray();
-      res.send(review);
+      const myreview = await cursor.toArray();
+      res.send(myreview);
     });
 
     app.post('/reviews', async(req, res)=>{
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
       res.send(result);
-    })
+    });
+
+    app.get('/reviews', async(req,res) =>{
+      console.log(req.query)
+      let query ={};
+      if(req.query.email){
+        query = {
+          email: req.query.email
+        }
+      }
+      const cursor = reviewCollection.find(query);
+      const review = await cursor.toArray();
+      res.send(review);
+    });
 
     // app.get('/review', async(req,res) =>{
     //   let query ={};
@@ -67,6 +86,20 @@ async function run(){
     //   const review = await cursor.toArray();
     //   res.send(review);
     // });
+
+
+    app.get('/userreview', async(req,res) =>{
+      console.log(req.query)
+      let query ={};
+      if(req.query.email){
+        query = {
+          email: req.query.email
+        }
+      }
+      const cursor = reviewCollection.find(query);
+      const review = await cursor.toArray();
+      res.send(review);
+    });
   }
   finally{
 
