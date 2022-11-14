@@ -23,6 +23,16 @@ async function run(){
     const serviceCollection = client.db('lawyerService').collection('services');
     const reviewCollection = client.db('lawyerService').collection('reviews');
 
+    // in order get limit service for homepage
+    app.get('/service', async(req,res) =>{
+      const query ={}
+      const cursor = serviceCollection.find(query).sort({ "_id": -1 }).limit(3);
+      const services = await cursor.toArray();
+      res.send(services);
+    });
+
+
+    // in order to get all service for service page
     app.get('/services', async(req,res) =>{
       const query ={}
       const cursor = serviceCollection.find(query);
@@ -30,6 +40,7 @@ async function run(){
       res.send(services);
     });
 
+    //getting service based on id
     app.get('/service/:id', async(req, res)=>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)}
@@ -37,6 +48,7 @@ async function run(){
       res.send(service);
     })
 
+    //getting selecting review based on id
     app.get('/reviews/:id', async(req, res)=>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)}
@@ -44,6 +56,7 @@ async function run(){
       res.send(service);
     })
 
+    //searching review that matched with the id
     app.get('/reviews', async(req,res) =>{
       console.log(req.query)
       let query ={};
@@ -59,18 +72,22 @@ async function run(){
       res.send(myreview);
     });
 
+
+    //adding service in database
     app.post('/services', async(req, res)=>{
       const review = req.body;
       const result = await serviceCollection.insertOne(review);
       res.send(result);
     });
 
+    //addign reviews or comment in database
     app.post('/reviews', async(req, res)=>{
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
       res.send(result);
     });
 
+    //deleting user review 
     app.delete('/reviews/:id', async(req, res)=>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
@@ -78,6 +95,8 @@ async function run(){
       res.send(result);
     })
 
+
+    //updating user review
     app.put('/reviews/:id', async(req, res)=>{
       const id = req.params.id;
       const filter = {_id: ObjectId(id)};
@@ -101,32 +120,7 @@ async function run(){
 
 
 
-    // app.get('/reviews', async(req,res) =>{
-    //   console.log(req.query)
-    //   let query ={};
-    //   if(req.query.email){
-    //     query = {
-    //       email: req.query.email
-    //     }
-    //   }
-    //   const cursor = reviewCollection.find(query);
-    //   const review = await cursor.toArray();
-    //   res.send(review);
-    // });
-
-    // app.get('/review', async(req,res) =>{
-    //   let query ={};
-    //   if(req.query.service_id){
-    //     query = {
-    //       service_id: req.query.service_id
-    //     }
-    //   }
-    //   const cursor = reviewCollection.find(query);
-    //   const review = await cursor.toArray();
-    //   res.send(review);
-    // });
-
-
+    //getting user review base on email
     app.get('/userreview', async(req,res) =>{
       console.log(req.query)
       let query ={};
